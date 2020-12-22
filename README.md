@@ -89,3 +89,8 @@ The output will be:
 	HEY-HI-HELLO, 1-2-3, REPEAT
 
 Basically, you are free to build any graph out of pipes (this buffer as a pipe), and any commands. This opens the road to use the Go language for a Shell automation (which is faster than Bash or Python or Perl).
+
+## And one more thing ))
+
+There is this standard thing: https://golang.org/pkg/io/#Pipe
+
