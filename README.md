@@ -16,7 +16,13 @@ Etymology:
 
 ## What's the use of it
 
-It's an absolutely useful tool for a shell automation. Basically, the standard lib, specifically the os/exec, allows for quite convenient shell commands execution, nothing else is needed.... Except one thing. That thing is the ability to see the output of long-running command in real time, and/or process that output programmatically, and/or pipe that output to another command. All these cases are covered by this simple pipe-buffer.
+It's an absolutely useful tool for a shell automation. Basically, the standard lib, specifically the os/exec, allows for quite convenient shell commands execution out-of-the-box, nothing else is needed.... Except one thing. That thing is the ability to see the output of long-running command in real time, and/or process that output programmatically, and/or pipe that output to another command. All these cases are covered by this simple pipe-buffer.
+
+You can:
+
+- See the output of long-running Shell command in real time;
+- Process that output programmatically by your code, in real time;
+- Pipe that output to another Shell command;
 
 ## Example usage
 
