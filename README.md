@@ -1,6 +1,12 @@
 # milkthisbuffer
 Mutex/Lock-Free Thread-Safe Buffer in Go
 
+## For Shell automation in Go:
+
+- #### See the output of long-running Shell command in real time;
+- #### Process that output programmatically by your code, in real time;
+- #### Pipe that output to another Shell command;
+
 ## Mutex/Lock-Free Thread-Safe Buffer
 
 The same as bytes.Buffer, but thread-safe.
