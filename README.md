@@ -94,3 +94,54 @@ Basically, you are free to build any graph out of pipes (this buffer as a pipe),
 
 There is this standard thing: https://golang.org/pkg/io/#Pipe
 
+The example above can be written in 100% standard Go, without any third-party libs, this way:
+
+	package main
+	
+	import (
+		"fmt"
+		"io"
+		"os/exec"
+		"time"
+	)
+	
+	// Ctrl-D to end the input (Ctrl-Z on Windows)
+	
+	func main() {
+		pipe1_reader, pipe1_writer := io.Pipe()
+		pipe2_reader, pipe2_writer := io.Pipe()
+	
+		go StdoutAsync(pipe2_reader)
+	
+		go func() {
+			cmd := exec.Command("tr", "a-z", "A-Z")
+			cmd.Stdin = pipe1_reader
+			cmd.Stdout = pipe2_writer
+			cmd.Run()
+		}()
+		
+		cmd := exec.Command("echo", "hey-hi-hello, 1-2-3, repeat")
+		cmd.Stdout = pipe1_writer
+		cmd.Run()
+		pipe1_writer.Close() // signal the EOF
+		
+		time.Sleep(1 * time.Second)
+	}
+	
+	func StdoutAsync(b io.Reader) {
+		buf := make([]byte, 100)
+		for {
+			n, err := b.Read(buf)
+			if err != nil {
+				fmt.Printf("StdoutAsync: %v\n", err)
+				break
+			}
+			fmt.Printf("%v", string(buf[:n]))
+		}
+	}
+	
+And the output will be, identically:
+
+	HEY-HI-HELLO, 1-2-3, REPEAT
+
+It's up to you how to proceed. I myself am in doubt, if I wasted my time. Did I?
