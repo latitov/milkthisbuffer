@@ -107,7 +107,7 @@ type CommandObject struct {
 	Stderr	io.Writer
 }
 
-func (co *CommandObject) Execf(name string, arg ...string) {
+func (co *CommandObject) Execf(name string, arg ...string) (err error) {
 	
 	cmd := exec.Command(name, arg...)
 	
@@ -119,6 +119,7 @@ func (co *CommandObject) Execf(name string, arg ...string) {
 	
 	err := cmd.Run()
 	if err != nil {
-		log.Fatal(err)
+		log.Println(err)
 	}
+	return
 }
