@@ -117,7 +117,7 @@ func (co *CommandObject) Execf(name string, arg ...string) (err error) {
 	cmd.Stdout	= co.Stdout
 	cmd.Stderr	= co.Stderr
 	
-	err := cmd.Run()
+	err = cmd.Run()
 	if err != nil {
 		log.Println(err)
 	}
