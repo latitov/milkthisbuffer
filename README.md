@@ -50,6 +50,7 @@ You can:
 		cmd := exec.Command("tr", "a-z", "A-Z")
 		cmd.Stdin = os.Stdin
 		cmd.Stdout = mtb1
+		cmd.Stderr = mtb1
 	
 		err := cmd.Run()
 		if err != nil {
@@ -79,11 +80,13 @@ You can:
 			cmd := exec.Command("tr", "a-z", "A-Z")
 			cmd.Stdin = pipe1
 			cmd.Stdout = pipe2
+			cmd.Stderr = pipe2
 			cmd.Run()
 		}()
 		
 		cmd := exec.Command("echo", "hey-hi-hello, 1-2-3, repeat")
 		cmd.Stdout = pipe1
+		cmd.Stderr = pipe1
 		cmd.Run()
 		pipe1.Close()	// signal the EOF
 		
@@ -123,11 +126,13 @@ The example above can be written in 100% standard Go, without any third-party li
 			cmd := exec.Command("tr", "a-z", "A-Z")
 			cmd.Stdin = pipe1_reader
 			cmd.Stdout = pipe2_writer
+			cmd.Stderr = pipe2_writer
 			cmd.Run()
 		}()
 		
 		cmd := exec.Command("echo", "hey-hi-hello, 1-2-3, repeat")
 		cmd.Stdout = pipe1_writer
+		cmd.Stderr = pipe1_writer
 		cmd.Run()
 		pipe1_writer.Close() // signal the EOF
 		
