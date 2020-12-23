@@ -18,8 +18,11 @@ package milkthisbuffer
 //	MilkThisBuffer
 
 import (
-	"io"
+	// keep this sorted, please
 	"fmt"
+	"io"
+	"log"
+	"os/exec"
 )
 
 type MilkThisBuffer struct {
@@ -93,5 +96,29 @@ func (b *MilkThisBuffer) StdoutAsync() {
 			break
 		}
 		fmt.Printf("%v", string(buf[:n]))
+	}
+}
+
+type CommandObject struct {
+	Env	[]string
+	Dir	string
+	Stdin	io.Reader
+	Stdout	io.Writer
+	Stderr	io.Writer
+}
+
+func (co *CommandObject) Execf(name string, arg ...string) {
+	
+	cmd := exec.Command(name, arg...)
+	
+	cmd.Env	= co.Env
+	cmd.Dir	= co.Dir
+	cmd.Stdin	= co.Stdin
+	cmd.Stdout	= co.Stdout
+	cmd.Stderr	= co.Stderr
+	
+	err := cmd.Run()
+	if err != nil {
+		log.Fatal(err)
 	}
 }
