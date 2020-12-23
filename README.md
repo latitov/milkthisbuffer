@@ -6,6 +6,7 @@ Mutex/Lock-Free Thread-Safe Buffer in Go
 - #### See the output of long-running Shell command in real time;
 - #### Process that output programmatically by your code, in real time;
 - #### Pipe that output to another Shell command;
+- #### Execute shell commands really easily, like in the Bash;
 
 ## Mutex/Lock-Free Thread-Safe Buffer
 
@@ -16,9 +17,9 @@ Wraps (implements) the io.Reader and io.Writer with a channel.
 Can also be used as a "pipe" between goroutines.
 
 Etymology:
-- Mutex/Lock-Free Thread-Safe Buffer
-- MxLkF_ThS_Buffer
-- MilkThisBuffer
+1. Mutex/Lock-Free Thread-Safe Buffer
+1. MxLkF_ThS_Buffer
+1. MilkThisBuffer
 
 ## What's the use of it
 
@@ -156,3 +157,83 @@ And the output will be, identically:
 	HEY-HI-HELLO, 1-2-3, REPEAT
 
 It's up to you how to proceed. I myself am in doubt, if I wasted my time. Did I?
+
+## THE BONUS
+
+Actually, it's more than that. I also added a wrapper for the code above, so now you can write the example this short:
+
+	package main
+	
+	import (
+		"github.com/latitov/milkthisbuffer"
+		"time"
+	)
+	
+	// Ctrl-D to end the input (Ctrl-Z on Windows)
+	
+	func main() {
+		pipe1 := milkthisbuffer.New(500)
+		pipe2 := milkthisbuffer.New(500)
+		
+		go pipe2.StdoutAsync()
+		
+		co1 := &milkthisbuffer.CommandObject{
+			Stdout: pipe1,
+			Stderr: pipe1,
+		}
+		co2 := &milkthisbuffer.CommandObject{
+			Stdin: pipe1,
+			Stdout: pipe2,
+			Stderr: pipe2,
+		}
+		
+		go func() {
+			co2.Execf("tr", "a-z", "A-Z")
+		}()
+		
+		co1.Execf("echo", "hey-hi-hello, 1-2-3, repeat")
+		
+		pipe1.Close()	// signal the EOF
+		
+		time.Sleep(1 * time.Second)
+	}
+One more example, without piping, illustrating the ease of calling many commands in sequence:
+
+	package main
+	
+	import (
+		"github.com/latitov/milkthisbuffer"
+		"time"
+	)
+	
+	// Ctrl-D to end the input (Ctrl-Z on Windows)
+	
+	func main() {
+		pipe1 := milkthisbuffer.New(500)
+		
+		go pipe1.StdoutAsync()
+		
+		co1 := &milkthisbuffer.CommandObject{
+			Stdout: pipe1,
+			Stderr: pipe1,
+		}
+		
+		co1.Execf("echo", "hey-hi-hello, 1-2-3, repeat")
+		co1.Execf("echo", "hey-hi-hello, 1-2-3-5, repeat")
+		co1.Execf("echo", "hey-hi-hello, 1-2-3-5-7, repeat")
+		co1.Execf("echo", "hey-hi-hello, 1-2-3-5-7-9, repeat")
+		
+		co1.Execf("git", "add", "-A")
+		co1.Execf("git", "commit", "-m", "'.'")
+		
+		pipe1.Close()	// signal the EOF
+		
+		time.Sleep(1 * time.Second)
+	}
+
+To do, maybe also:
+
+- A wrapper with Context;
+- A wrapper that return the error;
+
+Very useful.
