@@ -1,5 +1,5 @@
 # milkthisbuffer
-Mutex/Lock-Free Thread-Safe Buffer in Go
+Mutex-free/Lock-Free Thread-Safe Buffer in Go
 
 ## For Shell automation in Go:
 
