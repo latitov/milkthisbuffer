@@ -1,7 +1,7 @@
 # milkthisbuffer
 Mutex-free/Lock-Free Thread-Safe Buffer in Go
 
-## For Shell automation in Go:
+## For Shell automation in Golang:
 
 - #### See the output of long-running Shell command in real time;
 - #### Process that output programmatically by your code, in real time;
